@@ -7,9 +7,9 @@ pub struct HistoryRecord {
     pub id: String,
     pub file_name: String,
     pub file_size: u64,
-    pub direction: String, // "sent" | "received"
+    pub direction: String,
     pub timestamp: i64,
-    pub status: String, // "completed" | "failed" | "cancelled"
+    pub status: String,
     pub saved_path: Option<String>,
 }
 

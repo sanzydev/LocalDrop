@@ -12,19 +12,15 @@ pub fn is_private_or_local_ip(ip: &IpAddr) -> bool {
                 return true;
             }
             let octets = ipv4.octets();
-            // 10.0.0.0 - 10.255.255.255
             if octets[0] == 10 {
                 return true;
             }
-            // 172.16.0.0 - 172.31.255.255
             if octets[0] == 172 && (16..=31).contains(&octets[1]) {
                 return true;
             }
-            // 192.168.0.0 - 192.168.255.255
             if octets[0] == 192 && octets[1] == 168 {
                 return true;
             }
-            // 169.254.0.0 - 169.254.255.255 (Link-local)
             if octets[0] == 169 && octets[1] == 254 {
                 return true;
             }
@@ -60,7 +56,6 @@ mod tests {
         assert!(is_private_or_local_ip(&IpAddr::V4(Ipv4Addr::new(
             172, 20, 0, 1
         ))));
-        // Public IP
         assert!(!is_private_or_local_ip(&IpAddr::V4(Ipv4Addr::new(
             8, 8, 8, 8
         ))));

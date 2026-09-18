@@ -30,7 +30,7 @@ export const BulkActionBar: React.FC<BulkActionBarProps> = ({
     <div className="md3-bulk-action-bar" role="toolbar" aria-label="Bulk actions">
       <div className="md3-bulk-action-info">
         <span className="md3-bulk-selected-count">
-          {selectedCount} selected
+          {selectedCount} <span className="md3-bulk-label">selected</span>
         </span>
         <span className="md3-bulk-divider">•</span>
         <button
@@ -40,11 +40,11 @@ export const BulkActionBar: React.FC<BulkActionBarProps> = ({
         >
           {isAllSelected ? (
             <>
-              <XSquare size={16} /> Deselect all
+              <XSquare size={15} /> <span className="md3-bulk-btn-text">Deselect all</span>
             </>
           ) : (
             <>
-              <CheckSquare size={16} /> Select all ({totalCount})
+              <CheckSquare size={15} /> <span className="md3-bulk-btn-text">Select all ({totalCount})</span>
             </>
           )}
         </button>
@@ -53,18 +53,23 @@ export const BulkActionBar: React.FC<BulkActionBarProps> = ({
       <div className="md3-bulk-action-buttons">
         <Button
           variant="filled"
-          icon={<Download size={18} />}
+          icon={<Download size={16} />}
           onClick={onDownloadSelected}
           loading={isDownloading}
           className="md3-bulk-download-btn"
         >
-          Download {selectedCount > 1 ? `(${selectedCount} as ZIP)` : ''}
+          <span className="md3-bulk-download-text-desktop">
+            Download {selectedCount > 1 ? `(${selectedCount} as ZIP)` : ''}
+          </span>
+          <span className="md3-bulk-download-text-mobile">
+            {selectedCount > 1 ? `ZIP (${selectedCount})` : 'Download'}
+          </span>
         </Button>
 
         {onDeleteSelected && (
           <Button
             variant="tonal"
-            icon={<Trash2 size={18} />}
+            icon={<Trash2 size={16} />}
             onClick={onDeleteSelected}
             className="md3-bulk-delete-btn"
           >

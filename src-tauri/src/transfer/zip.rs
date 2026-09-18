@@ -4,7 +4,6 @@ use std::path::{Path, PathBuf};
 use zip::write::SimpleFileOptions;
 use zip::ZipWriter;
 
-/// Creates a ZIP archive from the given list of files in the destination path
 pub fn create_zip_archive(files: &[(String, PathBuf)], destination: &Path) -> Result<(), String> {
     let file = File::create(destination).map_err(|e| format!("Failed to create zip file: {}", e))?;
     let mut zip = ZipWriter::new(file);
@@ -12,7 +11,7 @@ pub fn create_zip_archive(files: &[(String, PathBuf)], destination: &Path) -> Re
         .compression_method(zip::CompressionMethod::Deflated)
         .unix_permissions(0o755);
 
-    let mut buffer = [0u8; 64 * 1024]; // 64KB buffer for streaming
+    let mut buffer = [0u8; 64 * 1024];
 
     for (display_name, file_path) in files {
         if !file_path.exists() {

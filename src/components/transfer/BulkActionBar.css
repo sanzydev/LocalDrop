@@ -7,15 +7,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
   background-color: var(--md-sys-color-surface-container-highest);
   color: var(--md-sys-color-on-surface);
   border: 1px solid var(--md-sys-color-outline-variant);
   border-radius: var(--md-shape-corner-full);
-  padding: 8px 12px 8px 20px;
+  padding: 8px 12px 8px 18px;
   box-shadow: var(--md-elevation-3);
   max-width: calc(100vw - 32px);
   width: max-content;
+  box-sizing: border-box;
   animation: md3-bulk-in 150ms var(--md-motion-easing-emphasized);
 }
 
@@ -25,11 +26,13 @@
   gap: 8px;
   font-family: var(--md-sys-typescale-font-plain);
   font-size: 14px;
+  min-width: 0;
 }
 
 .md3-bulk-selected-count {
   font-weight: 600;
   color: var(--md-sys-color-primary);
+  white-space: nowrap;
 }
 
 .md3-bulk-divider {
@@ -49,6 +52,7 @@
   padding: 4px 8px;
   border-radius: var(--md-shape-corner-sm);
   transition: background-color var(--md-motion-duration-short);
+  white-space: nowrap;
 }
 
 .md3-bulk-text-btn:hover {
@@ -60,10 +64,21 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .md3-bulk-download-btn {
   min-height: 36px;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.md3-bulk-download-text-mobile {
+  display: none;
+}
+
+.md3-bulk-download-text-desktop {
+  display: inline;
 }
 
 .md3-bulk-delete-btn {
@@ -75,8 +90,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: var(--md-shape-corner-full);
   border: none;
   background: transparent;
@@ -84,11 +99,48 @@
   font-size: 20px;
   line-height: 1;
   cursor: pointer;
-  margin-left: 4px;
 }
 
 .md3-bulk-close-btn:hover {
   background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+}
+
+@media (max-width: 600px) {
+  .md3-bulk-action-bar {
+    bottom: 16px;
+    width: calc(100vw - 20px);
+    max-width: calc(100vw - 20px);
+    padding: 6px 8px 6px 12px;
+    gap: 6px;
+    border-radius: 9999px;
+  }
+
+  .md3-bulk-action-info {
+    gap: 5px;
+    font-size: 12px;
+  }
+
+  .md3-bulk-label {
+    display: none;
+  }
+
+  .md3-bulk-download-text-desktop {
+    display: none;
+  }
+
+  .md3-bulk-download-text-mobile {
+    display: inline;
+  }
+
+  .md3-bulk-btn-text {
+    font-size: 12px;
+  }
+
+  .md3-bulk-download-btn {
+    padding: 0 10px;
+    min-height: 34px;
+    font-size: 12px;
+  }
 }
 
 @keyframes md3-bulk-in {

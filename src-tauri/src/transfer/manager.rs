@@ -159,11 +159,9 @@ impl TransferManager {
         let now = Instant::now();
         let sample_duration = (now - transfer.last_sample_time).as_secs_f64();
 
-        // Update speed and ETA every 250ms+
         if sample_duration >= 0.25 {
             let bytes_delta = transferred_bytes.saturating_sub(transfer.last_sample_bytes);
             let instant_speed = bytes_delta as f64 / sample_duration;
-            // Smooth speed with exponential moving average
             transfer.speed = if transfer.speed == 0.0 {
                 instant_speed
             } else {

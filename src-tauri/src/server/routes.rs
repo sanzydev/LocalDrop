@@ -158,7 +158,6 @@ async fn get_server_info(
     Query(query): Query<AuthQuery>,
     headers: HeaderMap,
 ) -> Result<Json<ServerInfoResponse>, StatusCode> {
-    // Strictly require matching pairing token
     if !check_auth(&state, &headers, &query).await {
         return Err(StatusCode::UNAUTHORIZED);
     }
@@ -438,7 +437,6 @@ async fn handle_bulk_download_zip(
 
     let (_zip_id, temp_zip_path) = state.temp_manager.create_temp_path(Some("zip"));
 
-    // Build ZIP archive
     if let Err(e) = create_zip_archive(&files_to_zip, &temp_zip_path) {
         let _ = tokio::fs::remove_file(&temp_zip_path).await;
         return Err((StatusCode::INTERNAL_SERVER_ERROR, e));
@@ -461,10 +459,8 @@ async fn handle_bulk_download_zip(
     );
     let disposition = format!("attachment; filename=\"{}\"", zip_name);
 
-    // Spawn background task to clean up temp ZIP after some time
     let cleanup_path = temp_zip_path.clone();
     tokio::spawn(async move {
-        // Wait 10 minutes or until finished
         tokio::time::sleep(tokio::time::Duration::from_secs(600)).await;
         let _ = tokio::fs::remove_file(cleanup_path).await;
     });

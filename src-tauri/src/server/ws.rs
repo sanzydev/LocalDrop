@@ -44,11 +44,7 @@ impl WsBroadcaster {
         }
     }
 
-    pub async fn handle_socket(
-        self: Arc<Self>,
-        socket: WebSocket,
-        _client_type: String,
-    ) {
+    pub async fn handle_socket(self: Arc<Self>, socket: WebSocket, _client_type: String) {
         let (mut sender, mut receiver) = socket.split();
         let (tx, mut rx) = mpsc::unbounded_channel::<Message>();
         let client_id = Uuid::new_v4().to_string();
@@ -59,7 +55,6 @@ impl WsBroadcaster {
             lock.len()
         };
 
-        // Notify that a peer connected and broadcast updated count
         self.broadcast(
             "peer_connected",
             serde_json::json!({
@@ -75,7 +70,6 @@ impl WsBroadcaster {
         )
         .await;
 
-        // Task to send messages from channel to websocket client
         let send_task = tokio::spawn(async move {
             while let Some(msg) = rx.recv().await {
                 if sender.send(msg).await.is_err() {
@@ -84,7 +78,6 @@ impl WsBroadcaster {
             }
         });
 
-        // Task to read incoming messages from websocket client
         let broadcaster = self.clone();
         let cid = client_id.clone();
         let recv_task = tokio::spawn(async move {
@@ -99,13 +92,11 @@ impl WsBroadcaster {
             }
         });
 
-        // Wait for connection to close
         tokio::select! {
             _ = send_task => {},
             _ = recv_task => {},
         }
 
-        // Cleanup client
         let remaining_count = {
             let mut lock = self.clients.write().await;
             lock.remove(&client_id);
