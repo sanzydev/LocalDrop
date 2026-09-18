@@ -1,0 +1,97 @@
+.md3-history-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 240px;
+}
+
+.md3-history-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.md3-history-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 14px;
+}
+
+.md3-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.md3-history-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background-color: var(--md-sys-color-surface-container);
+  border-radius: var(--md-shape-corner-md);
+}
+
+.md3-history-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--md-shape-corner-full);
+}
+
+.md3-history-icon-wrapper.dir-sent {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.md3-history-icon-wrapper.dir-received {
+  background-color: var(--md-sys-color-success-container);
+  color: var(--md-sys-color-on-success-container);
+}
+
+.md3-history-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.md3-history-name {
+  font-family: var(--md-sys-typescale-font-plain);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.md3-history-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.md3-history-status.status-completed {
+  color: var(--md-sys-color-success);
+  font-weight: 500;
+}
+
+.md3-history-status.status-failed {
+  color: var(--md-sys-color-error);
+  font-weight: 500;
+}
+
+.md3-history-status.status-cancelled {
+  color: var(--md-sys-color-outline);
+}

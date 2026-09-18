@@ -1,0 +1,56 @@
+.md3-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: var(--md-shape-corner-sm);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background-color: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  font-family: var(--md-sys-typescale-font-plain);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: default;
+  transition: all var(--md-motion-duration-short) var(--md-motion-easing-standard);
+  user-select: none;
+}
+
+.md3-chip.clickable {
+  cursor: pointer;
+}
+
+.md3-chip.clickable:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+}
+
+.md3-chip.selected {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border-color: transparent;
+}
+
+.md3-chip:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.md3-chip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.md3-chip-remove {
+  margin-left: 2px;
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.md3-chip-remove:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}

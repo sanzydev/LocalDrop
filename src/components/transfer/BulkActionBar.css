@@ -1,0 +1,103 @@
+.md3-bulk-action-bar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background-color: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-on-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-shape-corner-full);
+  padding: 8px 12px 8px 20px;
+  box-shadow: var(--md-elevation-3);
+  max-width: calc(100vw - 32px);
+  width: max-content;
+  animation: md3-bulk-in 150ms var(--md-motion-easing-emphasized);
+}
+
+.md3-bulk-action-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--md-sys-typescale-font-plain);
+  font-size: 14px;
+}
+
+.md3-bulk-selected-count {
+  font-weight: 600;
+  color: var(--md-sys-color-primary);
+}
+
+.md3-bulk-divider {
+  color: var(--md-sys-color-outline-variant);
+}
+
+.md3-bulk-text-btn {
+  background: none;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--md-sys-color-on-surface-variant);
+  font-family: var(--md-sys-typescale-font-plain);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--md-shape-corner-sm);
+  transition: background-color var(--md-motion-duration-short);
+}
+
+.md3-bulk-text-btn:hover {
+  background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+  color: var(--md-sys-color-on-surface);
+}
+
+.md3-bulk-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.md3-bulk-download-btn {
+  min-height: 36px;
+}
+
+.md3-bulk-delete-btn {
+  min-height: 36px;
+  color: var(--md-sys-color-error);
+}
+
+.md3-bulk-close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--md-shape-corner-full);
+  border: none;
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+.md3-bulk-close-btn:hover {
+  background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+}
+
+@keyframes md3-bulk-in {
+  from {
+    transform: translate(-50%, 20px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}

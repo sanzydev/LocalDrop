@@ -1,0 +1,72 @@
+.md3-dialog-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: md3-fade-in 150ms var(--md-motion-easing-standard);
+}
+
+.md3-dialog-surface {
+  width: 100%;
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+  border-radius: var(--md-shape-corner-xl);
+  box-shadow: var(--md-elevation-3);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  animation: md3-scale-up 150ms var(--md-motion-easing-emphasized);
+}
+
+.md3-dialog-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+  color: var(--md-sys-color-secondary);
+}
+
+.md3-dialog-title {
+  font-family: var(--md-sys-typescale-font-brand);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 32px;
+  margin-bottom: 16px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.md3-dialog-content {
+  font-family: var(--md-sys-typescale-font-plain);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-bottom: 24px;
+}
+
+.md3-dialog-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: auto;
+}
+
+@keyframes md3-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes md3-scale-up {
+  from { transform: scale(0.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

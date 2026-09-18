@@ -1,0 +1,75 @@
+.md3-top-app-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: 0 16px;
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  border-bottom: 1px solid var(--md-sys-color-surface-container);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: background-color var(--md-motion-duration-medium) ease;
+}
+
+.md3-top-app-bar-leading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.md3-top-app-bar-nav-icon {
+  display: flex;
+  align-items: center;
+}
+
+.md3-top-app-bar-title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.md3-top-app-bar-title {
+  font-family: var(--md-sys-typescale-font-brand);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0.15px;
+  color: var(--md-sys-color-on-surface);
+}
+
+.md3-top-app-bar-subtitle {
+  font-family: var(--md-sys-typescale-font-plain);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--md-sys-color-on-surface-variant);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.md3-top-app-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 600px) {
+  .md3-top-app-bar {
+    height: 56px;
+    padding: 0 12px;
+  }
+
+  .md3-top-app-bar-leading {
+    gap: 10px;
+  }
+
+  .md3-top-app-bar-title {
+    font-size: 18px;
+    line-height: 22px;
+  }
+
+  .md3-top-app-bar-actions {
+    gap: 4px;
+  }
+}

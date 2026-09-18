@@ -1,0 +1,80 @@
+.md3-transfer-progress-card {
+  background-color: var(--md-sys-color-surface-container);
+  border: 1px solid var(--md-sys-color-primary);
+  border-radius: var(--md-shape-corner-lg);
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--md-elevation-1);
+}
+
+.md3-tpc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.md3-tpc-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.md3-tpc-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--md-shape-corner-full);
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.md3-tpc-title {
+  font-family: var(--md-sys-typescale-font-brand);
+  font-size: 14px;
+  font-weight: 600;
+  display: block;
+  color: var(--md-sys-color-on-surface);
+}
+
+.md3-tpc-subtitle {
+  font-family: var(--md-sys-typescale-font-mono);
+  font-size: 12px;
+  color: var(--md-sys-color-on-surface-variant);
+  display: block;
+}
+
+.md3-tpc-metrics {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.md3-tpc-speed {
+  font-family: var(--md-sys-typescale-font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--md-sys-color-primary);
+}
+
+.md3-tpc-pct {
+  font-family: var(--md-sys-typescale-font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+}
+
+.md3-tpc-cancel-btn {
+  padding: 0 8px;
+  min-height: 32px;
+  font-size: 12px;
+  color: var(--md-sys-color-error);
+}
+
+.md3-tpc-progress-bar {
+  width: 100%;
+}

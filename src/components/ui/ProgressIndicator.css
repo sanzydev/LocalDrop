@@ -1,0 +1,94 @@
+/* Linear Progress */
+.md3-linear-progress {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background-color: var(--md-sys-color-surface-container-highest);
+  border-radius: var(--md-shape-corner-full);
+  overflow: hidden;
+}
+
+.md3-linear-progress-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: var(--md-sys-color-primary);
+  border-radius: var(--md-shape-corner-full);
+  transition: width var(--md-motion-duration-short) ease-out;
+}
+
+.md3-linear-progress.indeterminate .md3-linear-progress-indicator {
+  width: 50%;
+  animation: md3-linear-indeterminate 1.4s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+}
+
+@keyframes md3-linear-indeterminate {
+  0% {
+    left: -50%;
+    width: 30%;
+  }
+  50% {
+    left: 25%;
+    width: 60%;
+  }
+  100% {
+    left: 100%;
+    width: 30%;
+  }
+}
+
+/* Circular Progress */
+.md3-circular-progress {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.md3-circular-progress svg {
+  transform: rotate(-90deg);
+}
+
+.md3-circular-progress-track {
+  fill: transparent;
+  stroke: var(--md-sys-color-surface-container-highest);
+}
+
+.md3-circular-progress-indicator {
+  fill: transparent;
+  stroke: var(--md-sys-color-primary);
+  stroke-linecap: round;
+  transition: stroke-dashoffset var(--md-motion-duration-short) ease-out;
+}
+
+.md3-circular-progress.indeterminate svg {
+  animation: md3-circular-rotate 1.4s linear infinite;
+}
+
+.md3-circular-progress.indeterminate .md3-circular-progress-indicator {
+  stroke-dasharray: 80, 200;
+  stroke-dashoffset: 0;
+  animation: md3-circular-dash 1.4s ease-in-out infinite;
+}
+
+@keyframes md3-circular-rotate {
+  100% {
+    transform: rotate(270deg);
+  }
+}
+
+@keyframes md3-circular-dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 200;
+    stroke-dashoffset: -35px;
+  }
+  100% {
+    stroke-dasharray: 90, 200;
+    stroke-dashoffset: -125px;
+  }
+}

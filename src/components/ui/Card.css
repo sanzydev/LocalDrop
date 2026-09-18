@@ -1,0 +1,25 @@
+.md3-card {
+  border-radius: var(--md-shape-corner-md);
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow var(--md-motion-duration-short) var(--md-motion-easing-standard);
+}
+
+.md3-card-filled {
+  background-color: var(--md-sys-color-surface-container-low);
+  color: var(--md-sys-color-on-surface);
+  border: none;
+}
+
+.md3-card-elevated {
+  background-color: var(--md-sys-color-surface-container-low);
+  color: var(--md-sys-color-on-surface);
+  box-shadow: var(--md-elevation-1);
+}
+
+.md3-card-outlined {
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}

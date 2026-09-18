@@ -1,0 +1,60 @@
+.md3-snackbar-container {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
+  max-width: calc(100vw - 32px);
+  pointer-events: none;
+}
+
+.md3-snackbar {
+  pointer-events: auto;
+  min-width: 288px;
+  max-width: 568px;
+  background-color: var(--md-sys-color-inverse-surface);
+  color: var(--md-sys-color-inverse-on-surface);
+  border-radius: var(--md-shape-corner-xs);
+  box-shadow: var(--md-elevation-3);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  animation: md3-snackbar-in 150ms var(--md-motion-easing-emphasized);
+}
+
+.md3-snackbar-text {
+  font-family: var(--md-sys-typescale-font-plain);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.md3-snackbar-action {
+  background: none;
+  border: none;
+  color: var(--md-sys-color-inverse-primary);
+  font-family: var(--md-sys-typescale-font-brand);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 8px;
+  margin: -4px -8px;
+  border-radius: var(--md-shape-corner-xs);
+  transition: background-color var(--md-motion-duration-short);
+}
+
+.md3-snackbar-action:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+@keyframes md3-snackbar-in {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

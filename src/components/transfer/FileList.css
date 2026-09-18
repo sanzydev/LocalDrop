@@ -1,0 +1,53 @@
+.md3-file-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.md3-file-list-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.md3-file-list-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.md3-file-list-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  text-align: center;
+  color: var(--md-sys-color-on-surface-variant);
+  background-color: var(--md-sys-color-surface-container-low);
+  border-radius: var(--md-shape-corner-lg);
+  border: 1px dashed var(--md-sys-color-outline-variant);
+}
+
+.md3-file-list-empty-icon {
+  margin-bottom: 16px;
+  color: var(--md-sys-color-outline);
+}
+
+.md3-file-list-empty-title {
+  font-family: var(--md-sys-typescale-font-brand);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+  margin-bottom: 4px;
+}
+
+.md3-file-list-empty-subtitle {
+  font-family: var(--md-sys-typescale-font-plain);
+  font-size: 13px;
+  color: var(--md-sys-color-on-surface-variant);
+  max-width: 320px;
+}

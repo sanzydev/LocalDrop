@@ -1,0 +1,518 @@
+.localdrop-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+}
+.localdrop-nav-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  object-fit: cover;
+  display: block;
+}
+.localdrop-header-badges {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.localdrop-header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--md-sys-typescale-font-mono);
+  font-size: 11px;
+  color: var(--md-sys-color-on-surface-variant);
+  background-color: var(--md-sys-color-surface-container);
+  padding: 3px 10px;
+  border-radius: var(--md-shape-corner-full);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.localdrop-header-badge.devices-badge {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border-color: transparent;
+  font-weight: 500;
+}
+
+/* Layout */
+.localdrop-main {
+  flex: 1;
+  display: flex;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  gap: 24px;
+}
+
+.localdrop-main.mobile {
+  flex-direction: column;
+  padding: 12px;
+  gap: 16px;
+}
+
+/* Sidebar */
+.localdrop-sidebar {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.localdrop-device-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px;
+}
+
+.localdrop-device-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.localdrop-device-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--md-shape-corner-full);
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.localdrop-device-name {
+  font-family: var(--md-sys-typescale-font-brand);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+  margin: 0;
+}
+
+.localdrop-device-ip {
+  font-family: var(--md-sys-typescale-font-mono);
+  font-size: 12px;
+  color: var(--md-sys-color-on-surface-variant);
+  margin: 0;
+}
+
+.localdrop-status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: auto;
+}
+
+.localdrop-status-indicator.connected {
+  background-color: var(--md-sys-color-success);
+  box-shadow: 0 0 6px var(--md-sys-color-success);
+}
+
+.localdrop-status-indicator.connecting {
+  background-color: #f59e0b;
+}
+
+.localdrop-status-indicator.disconnected {
+  background-color: var(--md-sys-color-error);
+}
+
+.localdrop-sidebar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.localdrop-sidebar-btn {
+  width: 100%;
+}
+
+/* Quick QR Preview Card */
+.localdrop-qr-preview-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.localdrop-qr-preview-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--md-sys-typescale-font-brand);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+}
+
+.localdrop-qr-canvas {
+  padding: 12px;
+  background-color: #ffffff;
+  border-radius: var(--md-shape-corner-md);
+  cursor: pointer;
+  box-shadow: var(--md-elevation-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--md-motion-duration-short);
+}
+
+.localdrop-qr-canvas:hover {
+  transform: scale(1.02);
+}
+
+.localdrop-qr-placeholder {
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888888;
+}
+
+.localdrop-qr-url-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+  background-color: var(--md-sys-color-surface-container);
+  border-radius: var(--md-shape-corner-xs);
+  padding: 4px 6px 4px 10px;
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.localdrop-qr-url-text {
+  font-family: var(--md-sys-typescale-font-mono);
+  font-size: 11px;
+  color: var(--md-sys-color-on-surface-variant);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+  transition: filter 0.2s ease, opacity 0.2s ease;
+  user-select: none;
+}
+
+.localdrop-qr-url-text.censored {
+  filter: blur(4.5px);
+  opacity: 0.55;
+  cursor: pointer;
+}
+
+.localdrop-qr-url-text.censored:hover,
+.localdrop-qr-url-text.revealed {
+  filter: none;
+  opacity: 1;
+  user-select: all;
+  cursor: pointer;
+}
+
+.localdrop-copy-icon-btn {
+  border: none;
+  background: transparent;
+  color: var(--md-sys-color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.localdrop-copy-icon-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Content Pane */
+.localdrop-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  padding-bottom: 80px; /* Space for BulkActionBar */
+}
+
+.localdrop-tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--md-sys-color-surface-container-highest);
+  padding-bottom: 2px;
+}
+
+.localdrop-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--md-shape-corner-sm) var(--md-shape-corner-sm) 0 0;
+  font-family: var(--md-sys-typescale-font-brand);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  position: relative;
+  transition: all var(--md-motion-duration-short);
+}
+
+.localdrop-tab:hover {
+  color: var(--md-sys-color-on-surface);
+  background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 4%, transparent);
+}
+
+.localdrop-tab.active {
+  color: var(--md-sys-color-primary);
+  font-weight: 600;
+}
+
+.localdrop-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: var(--md-sys-color-primary);
+  border-radius: 3px 3px 0 0;
+}
+
+.localdrop-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-family: var(--md-sys-typescale-font-mono);
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: var(--md-shape-corner-full);
+  background-color: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.localdrop-tab-count.active {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+.localdrop-file-view {
+  flex: 1;
+}
+
+/* Device Stat Rows in Desktop Sidebar */
+.localdrop-device-stat-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  background-color: var(--md-sys-color-surface-container);
+  border-radius: var(--md-shape-corner-sm);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.localdrop-stat-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.localdrop-stat-label {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 12px;
+}
+
+.localdrop-stat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-family: var(--md-sys-typescale-font-mono);
+  color: var(--md-sys-color-primary);
+  background-color: var(--md-sys-color-surface-container-highest);
+  padding: 2px 8px;
+  border-radius: var(--md-shape-corner-full);
+}
+
+.localdrop-stat-badge.token-badge {
+  color: var(--md-sys-color-tertiary);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background-color: var(--md-sys-color-surface-container-highest);
+  cursor: pointer;
+  max-width: 140px;
+  padding: 2px 8px;
+  transition: all var(--md-motion-duration-short);
+}
+
+.localdrop-stat-badge.token-badge:hover {
+  background-color: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+  border-color: var(--md-sys-color-tertiary);
+}
+
+.localdrop-stat-badge.token-badge code {
+  font-family: var(--md-sys-typescale-font-mono);
+  font-size: 11px;
+}
+
+.localdrop-token-copy-icon {
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+/* Authentication Required Screen */
+.localdrop-auth-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.localdrop-auth-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px 24px;
+  gap: 16px;
+  width: 100%;
+}
+
+.localdrop-auth-icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--md-shape-corner-full);
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.localdrop-auth-title {
+  font-family: var(--md-sys-typescale-font-brand);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--md-sys-color-on-surface);
+  margin: 0;
+}
+
+.localdrop-auth-subtitle {
+  font-size: 14px;
+  color: var(--md-sys-color-on-surface-variant);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.localdrop-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.localdrop-auth-input-group {
+  width: 100%;
+}
+
+.localdrop-auth-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-family: var(--md-sys-typescale-font-mono);
+  letter-spacing: 1px;
+  text-align: center;
+  border-radius: var(--md-shape-corner-sm);
+  border: 1px solid var(--md-sys-color-outline);
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
+  outline: none;
+  transition: border-color var(--md-motion-duration-short);
+}
+
+.localdrop-auth-input:focus {
+  border-color: var(--md-sys-color-primary);
+  border-width: 2px;
+}
+
+.localdrop-auth-error {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--md-sys-color-error);
+  background-color: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
+  padding: 6px 12px;
+  border-radius: var(--md-shape-corner-sm);
+}
+
+.localdrop-auth-btn {
+  width: 100%;
+  padding: 12px;
+  font-weight: 600;
+}
+
+.localdrop-auth-hint {
+  font-size: 12px;
+  color: var(--md-sys-color-outline);
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+.localdrop-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 18px 12px;
+  margin-top: auto;
+}
+
+.localdrop-footer-link {
+  background: transparent;
+  border: none;
+  font-family: var(--md-sys-typescale-font-brand);
+  font-size: 13px;
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  padding: 6px 14px;
+  border-radius: var(--md-shape-corner-full);
+  transition: all var(--md-motion-duration-short) ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+
+.localdrop-footer-link:hover {
+  background-color: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-primary);
+  transform: translateY(-1px);
+}
+
+.localdrop-footer-link strong {
+  color: var(--md-sys-color-primary);
+  font-weight: 600;
+}
