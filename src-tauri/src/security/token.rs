@@ -1,13 +1,10 @@
 use std::net::IpAddr;
 use uuid::Uuid;
 
-/// Generates a secure random pairing session token
 pub fn generate_pairing_token() -> String {
-    // Generate UUID without dashes for URL simplicity
     Uuid::new_v4().simple().to_string()
 }
 
-/// Checks whether an IP address belongs to a local private subnet or localhost
 pub fn is_private_or_local_ip(ip: &IpAddr) -> bool {
     match ip {
         IpAddr::V4(ipv4) => {
@@ -36,11 +33,8 @@ pub fn is_private_or_local_ip(ip: &IpAddr) -> bool {
         IpAddr::V6(ipv6) => ipv6.is_loopback(),
     }
 }
-
-/// Validates whether the provided token matches the active session token
 pub fn validate_token(active_token: &str, provided_token: Option<&str>) -> bool {
     if let Some(token) = provided_token {
-        // Constant time comparison to avoid timing attacks
         token.trim() == active_token.trim()
     } else {
         false
@@ -54,12 +48,22 @@ mod tests {
 
     #[test]
     fn test_private_ip_detection() {
-        assert!(is_private_or_local_ip(&IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1))));
-        assert!(is_private_or_local_ip(&IpAddr::V4(Ipv4Addr::new(192, 168, 1, 50))));
-        assert!(is_private_or_local_ip(&IpAddr::V4(Ipv4Addr::new(10, 0, 0, 2))));
-        assert!(is_private_or_local_ip(&IpAddr::V4(Ipv4Addr::new(172, 20, 0, 1))));
+        assert!(is_private_or_local_ip(&IpAddr::V4(Ipv4Addr::new(
+            127, 0, 0, 1
+        ))));
+        assert!(is_private_or_local_ip(&IpAddr::V4(Ipv4Addr::new(
+            192, 168, 1, 50
+        ))));
+        assert!(is_private_or_local_ip(&IpAddr::V4(Ipv4Addr::new(
+            10, 0, 0, 2
+        ))));
+        assert!(is_private_or_local_ip(&IpAddr::V4(Ipv4Addr::new(
+            172, 20, 0, 1
+        ))));
         // Public IP
-        assert!(!is_private_or_local_ip(&IpAddr::V4(Ipv4Addr::new(8, 8, 8, 8))));
+        assert!(!is_private_or_local_ip(&IpAddr::V4(Ipv4Addr::new(
+            8, 8, 8, 8
+        ))));
     }
 
     #[test]

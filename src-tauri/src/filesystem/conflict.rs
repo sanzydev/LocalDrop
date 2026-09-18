@@ -7,9 +7,6 @@ pub enum ConflictStrategy {
     Cancel,
 }
 
-/// Resolves a file destination path based on the conflict strategy.
-/// If the file does not exist, returns the original destination.
-/// If strategy is KeepBoth, generates "name (1).ext", "name (2).ext", etc.
 pub fn resolve_destination_path(
     dir: &Path,
     filename: &str,
@@ -25,12 +22,13 @@ pub fn resolve_destination_path(
         return None;
     }
 
-    // KeepBoth: find next available suffix
     let path = Path::new(filename);
-    let stem = path.file_stem().and_then(|s| s.to_str()).unwrap_or(filename);
+    let stem = path
+        .file_stem()
+        .and_then(|s| s.to_str())
+        .unwrap_or(filename);
     let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("");
 
-    // Strip existing (n) if present
     let (clean_stem, mut counter) = if let Some(idx) = stem.rfind(" (") {
         if stem.ends_with(')') {
             let num_str = &stem[idx + 2..stem.len() - 1];
@@ -72,17 +70,14 @@ mod tests {
 
         let file_path = temp_dir.join("test.txt");
         let _ = std::fs::write(&file_path, "hello");
-
-        // Replace strategy
-        let resolved_replace = resolve_destination_path(&temp_dir, "test.txt", ConflictStrategy::Replace);
+        let resolved_replace =
+            resolve_destination_path(&temp_dir, "test.txt", ConflictStrategy::Replace);
         assert_eq!(resolved_replace, Some(file_path.clone()));
-
-        // Cancel strategy
-        let resolved_cancel = resolve_destination_path(&temp_dir, "test.txt", ConflictStrategy::Cancel);
+        let resolved_cancel =
+            resolve_destination_path(&temp_dir, "test.txt", ConflictStrategy::Cancel);
         assert_eq!(resolved_cancel, None);
-
-        // KeepBoth strategy
-        let resolved_keep = resolve_destination_path(&temp_dir, "test.txt", ConflictStrategy::KeepBoth);
+        let resolved_keep =
+            resolve_destination_path(&temp_dir, "test.txt", ConflictStrategy::KeepBoth);
         assert_eq!(resolved_keep, Some(temp_dir.join("test (1).txt")));
 
         let _ = std::fs::remove_dir_all(&temp_dir);

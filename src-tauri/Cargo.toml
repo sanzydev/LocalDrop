@@ -32,6 +32,7 @@ rfd = "0.17.2"
 tokio-util = { version = "0.7", features = ["io"] }
 open = "5.4.4"
 mime_guess = "2.0.5"
+rust-embed = "8.12.0"
 
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration

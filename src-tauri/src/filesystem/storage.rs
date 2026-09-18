@@ -9,7 +9,7 @@ pub struct HistoryRecord {
     pub file_size: u64,
     pub direction: String, // "sent" | "received"
     pub timestamp: i64,
-    pub status: String,    // "completed" | "failed" | "cancelled"
+    pub status: String, // "completed" | "failed" | "cancelled"
     pub saved_path: Option<String>,
 }
 
@@ -38,9 +38,7 @@ impl HistoryManager {
 
     pub fn add_record(record: HistoryRecord) {
         let mut history = Self::load_history();
-        // Prepend so newest is first
         history.insert(0, record);
-        // Keep at most 200 items
         if history.len() > 200 {
             history.truncate(200);
         }

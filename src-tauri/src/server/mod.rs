@@ -71,12 +71,14 @@ impl LocalServer {
             }
         }
 
-        let listener = listener_opt.ok_or_else(|| {
-            format!("Failed to bind any port between {} and {}", port, port + 20)
-        })?;
+        let listener = listener_opt
+            .ok_or_else(|| format!("Failed to bind any port between {} and {}", port, port + 20))?;
 
         if actual_port != port {
-            println!("Port {} was busy, bound to port {} instead", port, actual_port);
+            println!(
+                "Port {} was busy, bound to port {} instead",
+                port, actual_port
+            );
             let mut s = settings.write().await;
             s.port = actual_port;
         }
@@ -84,14 +86,16 @@ impl LocalServer {
         let (shutdown_tx, shutdown_rx) = oneshot::channel::<()>();
 
         tokio::spawn(async move {
-            println!("LocalDrop HTTP server listening on http://0.0.0.0:{}", actual_port);
+            println!(
+                "LocalDrop HTTP server listening on http://0.0.0.0:{}",
+                actual_port
+            );
             let server = axum::serve(listener, router).with_graceful_shutdown(async move {
                 match shutdown_rx.await {
                     Ok(()) => {
                         println!("LocalDrop server shutting down gracefully");
                     }
                     Err(_) => {
-                        // Sender dropped; keep server alive indefinitely
                         std::future::pending::<()>().await;
                     }
                 }

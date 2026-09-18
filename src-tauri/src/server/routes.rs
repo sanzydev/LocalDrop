@@ -27,6 +27,11 @@ use crate::server::ws::WsBroadcaster;
 use crate::settings::config::AppSettings;
 use crate::transfer::manager::{SharedFileItem, TransferManager};
 use crate::transfer::zip::create_zip_archive;
+use rust_embed::RustEmbed;
+
+#[derive(RustEmbed)]
+#[folder = "../dist"]
+struct WebAssets;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -93,10 +98,7 @@ pub fn create_router(state: AppState) -> Router {
         .with_state(state)
 }
 
-async fn get_dev_token(
-    State(state): State<AppState>,
-    headers: HeaderMap,
-) -> (StatusCode, String) {
+async fn get_dev_token(State(state): State<AppState>, headers: HeaderMap) -> (StatusCode, String) {
     if let Some(host) = headers.get(header::HOST) {
         if let Ok(host_str) = host.to_str() {
             if host_str.starts_with("localhost") || host_str.starts_with("127.0.0.1") {
@@ -105,20 +107,21 @@ async fn get_dev_token(
             }
         }
     }
-    (StatusCode::FORBIDDEN, "Forbidden: Local host only".to_string())
+    (
+        StatusCode::FORBIDDEN,
+        "Forbidden: Local host only".to_string(),
+    )
 }
 
 async fn check_auth(state: &AppState, headers: &HeaderMap, query: &AuthQuery) -> bool {
     let current_token = state.pairing_token.read().await.clone();
 
-    // 1. Check Query parameter
     if let Some(ref t) = query.token {
         if !t.is_empty() && validate_token(&current_token, Some(t)) {
             return true;
         }
     }
 
-    // 2. Check Authorization header: Bearer <token>
     if let Some(auth_header) = headers.get(header::AUTHORIZATION) {
         if let Ok(auth_str) = auth_header.to_str() {
             if let Some(token) = auth_str.strip_prefix("Bearer ") {
@@ -129,7 +132,6 @@ async fn check_auth(state: &AppState, headers: &HeaderMap, query: &AuthQuery) ->
         }
     }
 
-    // 3. Check X-Pairing-Token header
     if let Some(token_header) = headers.get("x-pairing-token") {
         if let Ok(token_str) = token_header.to_str() {
             if validate_token(&current_token, Some(token_str)) {
@@ -141,9 +143,7 @@ async fn check_auth(state: &AppState, headers: &HeaderMap, query: &AuthQuery) ->
     false
 }
 
-async fn get_public_status(
-    State(state): State<AppState>,
-) -> Json<PublicStatusResponse> {
+async fn get_public_status(State(state): State<AppState>) -> Json<PublicStatusResponse> {
     let settings = state.settings.read().await;
     Json(PublicStatusResponse {
         device_name: settings.device_name.clone(),
@@ -176,7 +176,10 @@ async fn get_server_info(
         active_transfers: client_count,
         connected_devices: client_count,
         total_shared_files: shared_files.len(),
-        url: format!("http://{}:{}/?token={}", state.ip_address, settings.port, token),
+        url: format!(
+            "http://{}:{}/?token={}",
+            state.ip_address, settings.port, token
+        ),
     };
 
     Ok(Json(info))
@@ -201,7 +204,10 @@ async fn handle_streaming_upload(
     mut multipart: Multipart,
 ) -> Result<impl IntoResponse, (StatusCode, String)> {
     if !check_auth(&state, &headers, &query).await {
-        return Err((StatusCode::UNAUTHORIZED, "Invalid pairing token".to_string()));
+        return Err((
+            StatusCode::UNAUTHORIZED,
+            "Invalid pairing token".to_string(),
+        ));
     }
 
     let download_dir = {
@@ -245,7 +251,10 @@ async fn handle_streaming_upload(
 
             if let Err(e) = temp_file.write_all(&chunk).await {
                 let _ = tokio::fs::remove_file(&temp_path).await;
-                state.transfer_manager.fail_transfer(&transfer_id, &e.to_string()).await;
+                state
+                    .transfer_manager
+                    .fail_transfer(&transfer_id, &e.to_string())
+                    .await;
                 return Err((StatusCode::INTERNAL_SERVER_ERROR, e.to_string()));
             }
 
@@ -256,7 +265,10 @@ async fn handle_streaming_upload(
                 .update_progress(&transfer_id, total_transferred)
                 .await
             {
-                state.broadcaster.broadcast("transfer_progress", progress).await;
+                state
+                    .broadcaster
+                    .broadcast("transfer_progress", progress)
+                    .await;
             }
         }
 
@@ -281,7 +293,10 @@ async fn handle_streaming_upload(
                 let _ = tokio::fs::remove_file(&temp_path).await;
             } else {
                 let _ = tokio::fs::remove_file(&temp_path).await;
-                state.transfer_manager.fail_transfer(&transfer_id, &e.to_string()).await;
+                state
+                    .transfer_manager
+                    .fail_transfer(&transfer_id, &e.to_string())
+                    .await;
                 return Err((StatusCode::INTERNAL_SERVER_ERROR, e.to_string()));
             }
         }
@@ -294,7 +309,10 @@ async fn handle_streaming_upload(
             .unwrap_or(&original_file_name)
             .to_string();
 
-        let _ = state.transfer_manager.add_shared_file(dest_path.clone()).await;
+        let _ = state
+            .transfer_manager
+            .add_shared_file(dest_path.clone())
+            .await;
         let all_shared = state.transfer_manager.get_shared_files().await;
         state
             .broadcaster
@@ -356,7 +374,6 @@ async fn handle_download_file(
     let stream = ReaderStream::new(file);
     let body = Body::from_stream(stream);
 
-    // Encode filename safely for Content-Disposition
     let disposition = format!(
         "attachment; filename=\"{}\"",
         shared_file.name.replace('"', "\\\"")
@@ -370,7 +387,6 @@ async fn handle_download_file(
         .body(body)
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-    // Record history
     HistoryManager::add_record(HistoryRecord {
         id: uuid::Uuid::new_v4().to_string(),
         file_name: shared_file.name.clone(),
@@ -396,7 +412,10 @@ async fn handle_bulk_download_zip(
     Json(payload): Json<BulkDownloadRequest>,
 ) -> Result<Response, (StatusCode, String)> {
     if !check_auth(&state, &headers, &query).await {
-        return Err((StatusCode::UNAUTHORIZED, "Invalid pairing token".to_string()));
+        return Err((
+            StatusCode::UNAUTHORIZED,
+            "Invalid pairing token".to_string(),
+        ));
     }
 
     if payload.file_ids.is_empty() {
@@ -411,7 +430,10 @@ async fn handle_bulk_download_zip(
     }
 
     if files_to_zip.is_empty() {
-        return Err((StatusCode::NOT_FOUND, "Selected files not found".to_string()));
+        return Err((
+            StatusCode::NOT_FOUND,
+            "Selected files not found".to_string(),
+        ));
     }
 
     let (_zip_id, temp_zip_path) = state.temp_manager.create_temp_path(Some("zip"));
@@ -433,7 +455,10 @@ async fn handle_bulk_download_zip(
     let stream = ReaderStream::new(file);
     let body = Body::from_stream(stream);
 
-    let zip_name = format!("localdrop_{}.zip", chrono::Utc::now().format("%Y%m%d_%H%M%S"));
+    let zip_name = format!(
+        "localdrop_{}.zip",
+        chrono::Utc::now().format("%Y%m%d_%H%M%S")
+    );
     let disposition = format!("attachment; filename=\"{}\"", zip_name);
 
     // Spawn background task to clean up temp ZIP after some time
@@ -479,56 +504,65 @@ async fn ws_endpoint(
     }
 
     let broadcaster = state.broadcaster.clone();
-    ws.on_upgrade(move |socket: WebSocket| {
-        broadcaster.handle_socket(socket, "client".to_string())
-    })
+    ws.on_upgrade(move |socket: WebSocket| broadcaster.handle_socket(socket, "client".to_string()))
 }
 
 async fn static_file_handler(
     State(state): State<AppState>,
     uri: axum::http::Uri,
 ) -> impl IntoResponse {
-    let path_str = uri.path().trim_start_matches('/');
-    let target_path = if path_str.is_empty() {
-        state.dist_dir.join("index.html")
-    } else {
-        let candidate = state.dist_dir.join(path_str);
-        if candidate.exists() && candidate.is_file() {
-            candidate
-        } else {
-            // SPA fallback to index.html
-            state.dist_dir.join("index.html")
-        }
-    };
+    let mut path_str = uri.path().trim_start_matches('/');
+    if path_str.is_empty() {
+        path_str = "index.html";
+    }
 
-    if target_path.exists() {
-        if let Ok(content) = tokio::fs::read(&target_path).await {
-            let mime = mime_guess::from_path(&target_path)
+    let disk_file = state.dist_dir.join(path_str);
+    if disk_file.exists() && disk_file.is_file() {
+        if let Ok(content) = tokio::fs::read(&disk_file).await {
+            let mime = mime_guess::from_path(&disk_file)
                 .first_or_octet_stream()
                 .to_string();
+            return (StatusCode::OK, [(header::CONTENT_TYPE, mime)], content).into_response();
+        }
+    }
+
+    if let Some(embedded_file) = WebAssets::get(path_str) {
+        let mime = mime_guess::from_path(path_str)
+            .first_or_octet_stream()
+            .to_string();
+        return (
+            StatusCode::OK,
+            [(header::CONTENT_TYPE, mime)],
+            embedded_file.data.into_owned(),
+        )
+            .into_response();
+    }
+
+    if let Some(index_file) = WebAssets::get("index.html") {
+        return (
+            StatusCode::OK,
+            [(header::CONTENT_TYPE, "text/html; charset=utf-8".to_string())],
+            index_file.data.into_owned(),
+        )
+            .into_response();
+    }
+
+    let disk_index = state.dist_dir.join("index.html");
+    if disk_index.exists() {
+        if let Ok(content) = tokio::fs::read(&disk_index).await {
             return (
                 StatusCode::OK,
-                [(header::CONTENT_TYPE, mime)],
+                [(header::CONTENT_TYPE, "text/html; charset=utf-8".to_string())],
                 content,
             )
                 .into_response();
         }
     }
 
-    // Minimal fallback web client if dist hasn't been built yet
-    let fallback_html = r#"<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><title>LocalDrop</title></head>
-<body style="font-family:sans-serif;text-align:center;padding:50px;">
-  <h2>LocalDrop Server is Running</h2>
-  <p>Please build frontend assets (npm run build) to serve the full web interface.</p>
-</body>
-</html>"#;
-
     (
-        StatusCode::OK,
-        [(header::CONTENT_TYPE, "text/html; charset=utf-8".to_string())],
-        fallback_html.as_bytes().to_vec(),
+        StatusCode::NOT_FOUND,
+        [(header::CONTENT_TYPE, "text/plain".to_string())],
+        "Not Found".as_bytes().to_vec(),
     )
         .into_response()
 }

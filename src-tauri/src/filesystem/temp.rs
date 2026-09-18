@@ -12,8 +12,6 @@ impl TempManager {
         let _ = fs::create_dir_all(&base_dir);
         Self { base_dir }
     }
-
-    /// Creates a temporary file path with a unique UUID
     pub fn create_temp_path(&self, extension: Option<&str>) -> (String, PathBuf) {
         let id = Uuid::new_v4().to_string();
         let file_name = match extension {
@@ -24,14 +22,12 @@ impl TempManager {
         (id, path)
     }
 
-    /// Removes a temporary file safely
     pub fn remove_file(path: &Path) {
         if path.exists() {
             let _ = fs::remove_file(path);
         }
     }
 
-    /// Cleans up any remaining temporary files in the temp directory
     pub fn clean_all(&self) {
         if let Ok(entries) = fs::read_dir(&self.base_dir) {
             for entry in entries.flatten() {

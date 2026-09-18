@@ -25,7 +25,6 @@ pub fn run() {
     let temp_manager = Arc::new(TempManager::new());
     let broadcaster = Arc::new(WsBroadcaster::new());
 
-    // Resolve dist folder location
     let dist_dir = if let Ok(manifest_dir) = std::env::var("CARGO_MANIFEST_DIR") {
         PathBuf::from(manifest_dir).join("../dist")
     } else {
