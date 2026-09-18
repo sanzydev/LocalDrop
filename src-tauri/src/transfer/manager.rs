@@ -8,6 +8,7 @@ use tokio::sync::RwLock;
 use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SharedFileItem {
     pub id: String,
     pub name: String,
@@ -19,15 +20,16 @@ pub struct SharedFileItem {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct TransferProgressInfo {
     pub transfer_id: String,
     pub file_id: String,
     pub file_name: String,
     pub total_bytes: u64,
     pub transferred_bytes: u64,
-    pub progress: f32, // 0.0 to 100.0
-    pub speed: f64,    // bytes per sec
-    pub eta: u64,      // seconds remaining
+    pub progress: f32,
+    pub speed: f64,
+    pub eta: u64,
     pub status: String,
     pub error: Option<String>,
 }

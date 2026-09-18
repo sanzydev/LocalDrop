@@ -210,6 +210,12 @@ async fn handle_streaming_upload(
     };
     let _ = tokio::fs::create_dir_all(&download_dir).await;
 
+    let total_size_hint = headers
+        .get("x-file-size")
+        .and_then(|h| h.to_str().ok())
+        .and_then(|s| s.parse::<u64>().ok())
+        .unwrap_or(0);
+
     let mut uploaded_files = Vec::new();
 
     while let Ok(Some(mut field)) = multipart.next_field().await {
@@ -218,7 +224,6 @@ async fn handle_streaming_upload(
             .map(|s| s.to_string())
             .unwrap_or_else(|| format!("file_{}.bin", uuid::Uuid::new_v4()));
 
-        // Create temporary file path
         let (temp_id, temp_path) = state.temp_manager.create_temp_path(None);
         let mut temp_file = File::create(&temp_path)
             .await
@@ -226,7 +231,7 @@ async fn handle_streaming_upload(
 
         let (transfer_id, cancel_flag) = state
             .transfer_manager
-            .create_transfer(&temp_id, &original_file_name, 0)
+            .create_transfer(&temp_id, &original_file_name, total_size_hint)
             .await;
 
         let mut total_transferred: u64 = 0;
@@ -261,11 +266,9 @@ async fn handle_streaming_upload(
             continue;
         }
 
-        // Flush file
         let _ = temp_file.flush().await;
         drop(temp_file);
 
-        // Resolve conflict & move file into download_dir
         let dest_path = resolve_destination_path(
             &download_dir,
             &original_file_name,
@@ -274,7 +277,6 @@ async fn handle_streaming_upload(
         .unwrap_or_else(|| download_dir.join(&original_file_name));
 
         if let Err(e) = tokio::fs::rename(&temp_path, &dest_path).await {
-            // If rename fails across volumes, copy and delete
             if tokio::fs::copy(&temp_path, &dest_path).await.is_ok() {
                 let _ = tokio::fs::remove_file(&temp_path).await;
             } else {
@@ -292,7 +294,13 @@ async fn handle_streaming_upload(
             .unwrap_or(&original_file_name)
             .to_string();
 
-        // Record history
+        let _ = state.transfer_manager.add_shared_file(dest_path.clone()).await;
+        let all_shared = state.transfer_manager.get_shared_files().await;
+        state
+            .broadcaster
+            .broadcast("files_updated", serde_json::json!({ "files": all_shared }))
+            .await;
+
         HistoryManager::add_record(HistoryRecord {
             id: uuid::Uuid::new_v4().to_string(),
             file_name: final_name.clone(),
@@ -311,6 +319,7 @@ async fn handle_streaming_upload(
                     "transferId": transfer_id,
                     "fileName": final_name,
                     "size": total_transferred,
+                    "savedPath": dest_path.to_string_lossy().to_string(),
                 }),
             )
             .await;

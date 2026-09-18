@@ -151,6 +151,8 @@ export class LocalDropApiClient {
         xhr.setRequestHeader('Authorization', `Bearer ${this.token}`);
         xhr.setRequestHeader('x-pairing-token', this.token);
       }
+      xhr.setRequestHeader('x-file-size', file.size.toString());
+      xhr.setRequestHeader('x-file-name', encodeURIComponent(file.name));
 
       if (xhr.upload && onProgress) {
         xhr.upload.onprogress = (e) => {

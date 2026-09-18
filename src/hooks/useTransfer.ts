@@ -35,38 +35,90 @@ export function useTransfer() {
     });
 
     const unsubProgress = wsService.on<TransferProgressPayload>('transfer_progress', (payload) => {
-      setTransferQueue((prev) =>
-        prev.map((item) => {
-          if (item.id === payload.fileId || item.name === payload.fileId) {
-            return {
-              ...item,
-              status: payload.status,
-              progress: Math.round(payload.progress),
-              transferredBytes: payload.transferredBytes,
-              speed: payload.speed,
-              eta: payload.eta,
-            };
-          }
-          return item;
-        })
-      );
+      const p = payload as any;
+      const fileId = p.fileId || p.file_id || '';
+      const transferId = p.transferId || p.transfer_id || '';
+      const fileName = p.fileName || p.file_name || fileId;
+      const totalBytes = p.totalBytes ?? p.total_bytes ?? 0;
+      const transferredBytes = p.transferredBytes ?? p.transferred_bytes ?? 0;
+      const progress = Math.round(p.progress ?? 0);
+      const speed = p.speed ?? 0;
+      const eta = p.eta ?? 0;
+      const status = p.status || 'transferring';
+
+      setTransferQueue((prev) => {
+        const index = prev.findIndex(
+          (item) => (fileId && item.id === fileId) || (transferId && item.id === transferId) || item.name === fileName
+        );
+        if (index >= 0) {
+          return prev.map((item, i) =>
+            i === index
+              ? {
+                  ...item,
+                  status,
+                  progress: progress > 0 ? progress : item.progress,
+                  transferredBytes: transferredBytes > 0 ? transferredBytes : item.transferredBytes,
+                  speed: speed > 0 ? speed : item.speed,
+                  eta: eta > 0 ? eta : item.eta,
+                  size: totalBytes > 0 ? totalBytes : item.size,
+                }
+              : item
+          );
+        } else {
+          const newItem: TransferFile = {
+            id: transferId || fileId || `recv_${Date.now()}`,
+            name: fileName,
+            size: totalBytes,
+            type: 'application/octet-stream',
+            status,
+            progress,
+            transferredBytes,
+            speed,
+            eta,
+          };
+          return [newItem, ...prev];
+        }
+      });
     });
 
-    const unsubComplete = wsService.on<{ transferId: string; fileName: string }>('transfer_completed', (payload) => {
-      setTransferQueue((prev) =>
-        prev.map((item) => {
-          if (item.id === payload.transferId || item.name === payload.fileName) {
-            return {
-              ...item,
-              status: 'completed',
-              progress: 100,
-              speed: 0,
-              eta: 0,
-            };
-          }
-          return item;
-        })
-      );
+    const unsubComplete = wsService.on<{ transferId?: string; fileName?: string; size?: number }>('transfer_completed', (payload) => {
+      const p = payload as any;
+      const transferId = p.transferId || p.transfer_id || '';
+      const fileName = p.fileName || p.file_name || '';
+      const size = p.size || 0;
+
+      setTransferQueue((prev) => {
+        const index = prev.findIndex(
+          (item) => (transferId && item.id === transferId) || (fileName && item.name === fileName)
+        );
+        if (index >= 0) {
+          return prev.map((item, i) =>
+            i === index
+              ? {
+                  ...item,
+                  status: 'completed',
+                  progress: 100,
+                  speed: 0,
+                  eta: 0,
+                  transferredBytes: size > 0 ? size : item.size,
+                }
+              : item
+          );
+        } else {
+          const newItem: TransferFile = {
+            id: transferId || `comp_${Date.now()}`,
+            name: fileName,
+            size,
+            type: 'application/octet-stream',
+            status: 'completed',
+            progress: 100,
+            transferredBytes: size,
+            speed: 0,
+            eta: 0,
+          };
+          return [newItem, ...prev];
+        }
+      });
       refreshSharedFiles();
     });
 

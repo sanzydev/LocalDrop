@@ -46,13 +46,25 @@ pub fn run() {
 
     let app_state = server_instance.app_state.clone();
 
-    // Ensure background Tokio runtime and server instance live for the entire process lifetime
     Box::leak(Box::new(rt));
     std::mem::forget(server_instance);
 
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .manage(app_state)
+        .setup(|app| {
+            #[cfg(desktop)]
+            {
+                use tauri::Manager;
+                if let Some(window) = app.get_webview_window("main") {
+                    let icon_bytes = include_bytes!("../icons/128x128.png");
+                    if let Ok(icon) = tauri::image::Image::from_bytes(icon_bytes) {
+                        let _ = window.set_icon(icon);
+                    }
+                }
+            }
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             commands::get_server_info,
             commands::get_settings,
