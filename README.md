@@ -8,6 +8,16 @@
   A local network file transfer application designed to send and receive files between PCs and mobile devices directly over Wi-Fi without cloud dependencies, accounts, or third-party servers.
 </p>
 
+## Preview
+
+<p align="center">
+  <img src="media/1.png" alt="LocalDrop Dashboard" width="90%" />
+</p>
+
+<p align="center">
+  <img src="media/2.png" alt="LocalDrop Theme Selection" width="90%" />
+</p>
+
 ## Overview
 
 LocalDrop operates using a desktop host application built on Tauri and Rust combined with a local web interface built with React, TypeScript, and Material Design 3. When running on a PC, LocalDrop serves a lightweight HTTP server and WebSocket hub over the local area network (LAN). Devices on the same Wi-Fi network can connect via their web browser to exchange files bidirectionally.
